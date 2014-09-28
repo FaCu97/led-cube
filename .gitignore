@@ -1,0 +1,14 @@
+LED_Cube.aps
+led_cube.aws
+default/LED_Cube.eep
+default/LED_Cube.elf
+default/LED_Cube.hex
+default/LED_Cube.lss
+default/LED_Cube.map
+default/led_cube.o
+default/main.o
+default/Makefile
+default/patterns.o
+default/dep/led_cube.o.d
+default/dep/main.o.d
+default/dep/patterns.o.d
