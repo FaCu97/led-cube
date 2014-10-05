@@ -3,7 +3,9 @@
 #include <util/delay.h>
 #include "led_cube.h"
 #include "patterns.h"
+#include "remote_control.h"
 
+extern unsigned char Global_Variable;
 uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE];
 uint16_t mask[CUBE_SIZE];
 
@@ -12,11 +14,18 @@ uint16_t mask[CUBE_SIZE];
 int main(void)
 {
 	uint16_t i;
-
+	RC_Init();
 	Cube_Init();
 	
 	while(1)
-	{
+	{	
+		_delay_ms(100);
+		Clear_Buffer(buffer);
+		buffer[0][0][Global_Variable&0x03] = BRIGHTNESS_MAX;
+
+		Load_Buffer_0(buffer);
+
+		/*
 		Clear_Buffer(buffer);
 		for (i = 0; i < TIME; i++)
 		{
@@ -44,7 +53,10 @@ int main(void)
 			Explode_Pattern(buffer);
 			Load_Buffer_0(buffer);
         	_delay_ms(30);
-		};
+		};*/
+
+
+		
 
 
 	};

@@ -218,6 +218,6 @@ void Cube_Init(void)
 
 	TCCR2 = (1<<WGM21) | (1<<CS22) | (1<<CS21) | (0<<CS20); // Prescaler, Clear timer on Compare match;
 	OCR2 = OCR2_DEFAULT;
-	TIMSK = (1<<OCIE2); // Timer2 output compare Interrupt;	
+	TIMSK |= (1<<OCIE2); // Timer2 output compare Interrupt;	
 	sei();
 };

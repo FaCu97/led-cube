@@ -12,3 +12,5 @@ default/patterns.o
 default/dep/led_cube.o.d
 default/dep/main.o.d
 default/dep/patterns.o.d
+default/remote_control.o
+default/dep/remote_control.o.d
