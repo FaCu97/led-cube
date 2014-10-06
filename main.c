@@ -13,53 +13,36 @@ uint16_t mask[CUBE_SIZE];
 
 int main(void)
 {
-	//uint16_t i;
 	RC_Init();
 	Cube_Init();
 	
 	while(1)
 	{	
-		_delay_ms(100);
-		Clear_Buffer(buffer);
-		buffer[0][0][Global_Variable&0x03] = BRIGHTNESS_MAX;
-
+		switch ( Global_Variable&0x03)
+		{
+			case 0 : 
+			{	
+				Snow_Pattern(buffer); 
+				break;
+			};
+			case 1 : 
+			{
+				Diagonal_Pattern(buffer); 
+				break;
+			};
+			case 2 : 
+			{
+				Scale_Pattern(buffer); 
+				break;
+			};
+			case 3 : 
+			{
+				Explode_Pattern(buffer); 
+				break;
+			};
+		};
 		Load_Buffer(buffer);
-
-		
-		Clear_Buffer(buffer); 
-		/*
-		for (i = 0; i < TIME; i++)
-		{
-			Snow_Pattern(buffer);
-			Load_Buffer(buffer);
-        	_delay_ms(30);
-		};
-		Clear_Buffer(buffer);
-		for (i = 0; i < TIME; i++)
-		{
-			Diagonal_Pattern(buffer);
-			Load_Buffer(buffer);
-        	_delay_ms(30);
-		};
-		Clear_Buffer(buffer);
-		for (i = 0; i < TIME; i++)
-		{
-			Scale_Pattern(buffer);
-			Load_Buffer(buffer);
-        	_delay_ms(30);
-		};
-		Clear_Buffer(buffer);
-		for (i = 0; i < TIME; i++)
-		{
-			Explode_Pattern(buffer);
-			Load_Buffer(buffer);
-        	_delay_ms(30);
-		};
-		*/
-
-		
-
-
+        _delay_ms(30);
 	};
 };
 

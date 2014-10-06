@@ -46,15 +46,11 @@ void RC_Init (void)
 };                                                
 
 void RC_Action(unsigned char RC_Command)
-{    
-	if (RC_Command == Btn_UP)
-	{
+{
+	if (RC_Command == Btn_LEFT)
 		Global_Variable++;
-	};
-	if (RC_Command == Btn_DOWN)
-	{
+	if (RC_Command == Btn_RIGHT)
 		Global_Variable--;
-	};
 	RC_Command = 0;
 	RC_Current_Command = 0;
 };
