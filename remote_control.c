@@ -56,12 +56,13 @@ void RC_Action(unsigned char RC_Command)
 		Global_Variable--;
 	};
 	RC_Command = 0;
+	RC_Current_Command = 0;
 };
 
 ISR (INT0_vect)     // External Interrupt    
 {  
     unsigned char RC_Interval;                // Length of interval       
-    //START_TIMER;
+
     RC_Interval = TCNT0;                    // Take Length of the last Interval
 
     TCCR0 = PRESCALER_1024; 
@@ -136,12 +137,10 @@ ISR (INT0_vect)     // External Interrupt
                         };
                 };
         };
-    //STOP_TIMER;
 };
 
 ISR (TIMER0_OVF_vect) // 32 ms without any signal
 {    
-    //START_TIMER;
     RC_No_Signal_Counter++;
     if (RC_No_Signal_Counter == 1)    // 32 MS WITHOUT ANY SIGNAL //
         {
@@ -160,12 +159,6 @@ ISR (TIMER0_OVF_vect) // 32 ms without any signal
                             RC_Repeat_Counter_Limit = RC_Short_Repeat_Counter_Limit;
                         };
                 };
-        /*     for protocol testing
-            Send_UART(Received_Bytes[0]);
-            Send_UART(Received_Bytes[1]);
-            Send_UART(Received_Bytes[2]);
-            Send_UART(Received_Bytes[3]);
-        */
             GICR |= (1<<INT0);                // Enable External Interrupts
         }
     if (RC_No_Signal_Counter == 5)        // 160 MS WITHOUT ANY SIGNAL
@@ -173,5 +166,4 @@ ISR (TIMER0_OVF_vect) // 32 ms without any signal
             TCCR0 = 0;            // Stop Timer0    
             RC_Current_Command = 0x00;
         };
-    //STOP_TIMER;
 };

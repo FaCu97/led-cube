@@ -170,7 +170,8 @@ void Clear_Buffer(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 ISR(TIMER2_COMP_vect)
 { 
 	DEBUG1_ON;
-	cli();
+	//cli();
+	TIMSK &= ~(1<<OCIE2);
 	PORTD = 0x00;
 	PORTB = 0x00;
 	PORTC = 0x00;
@@ -198,7 +199,8 @@ ISR(TIMER2_COMP_vect)
 	PORTC = data_ready[layer_counter][brightness_counter][1];
 	PORTD = 0x10 << layer_counter;
 	TCNT2 = 0;
-	sei();
+	//sei();
+	TIMSK |= (1<<OCIE2);
 	DEBUG1_OFF;
 };
 
