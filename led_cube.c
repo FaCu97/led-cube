@@ -29,7 +29,7 @@ void Brightness_Mask(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE], uint16_t *
 
 
 
-void Load_Buffer_0(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
+void Load_Buffer(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 {
 	uint8_t i1,i3,i0;
 	
@@ -64,42 +64,6 @@ void Load_Buffer_0(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 	};
 	DEBUG2_OFF;
 };
-
-
-/*
-void Load_Buffer_1(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
-{
-	uint8_t i1,i2,i3,i0;
-	
-	for (i1 = 0; i1 < CUBE_SIZE; i1++) // height
-	{
-		for (i2 = 0; i2 < BRIGHTNESS_MAX; i2++)
-		{
-			data_ready[i1][i2][0] = 0x00;
-			data_ready[i1][i2][1] = 0x00;
-		};
-		for (i2 = 0; i2 < CUBE_SIZE; i2++) // width
-		{
-			for (i3 = 0; i3 < CUBE_SIZE; i3++)
-			{
-				uint8_t brightness = buffer[i1][i2][i3];
-				if (brightness > BRIGHTNESS_MAX)
-					brightness = BRIGHTNESS_MAX;
-				for (i0 = 0; i0 < brightness; i0++)
-				{
-					switch (i2)
-					{
-						case 0 : data_ready[i1][i0][0] |= (0x01<<i3); break;
-						case 1 : data_ready[i1][i0][0] |= (0x10<<i3); break;
-						case 2 : data_ready[i1][i0][1] |= (0x80>>i3); break;
-						case 3 : data_ready[i1][i0][1] |= (0x08>>i3); break;
-					};
-				};
-			};
-		};
-	};
-};
-*/
 
 
 

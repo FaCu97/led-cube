@@ -18,8 +18,7 @@
 void Cube_Init(void);
 void Brightness_Mask(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE], uint16_t mask[CUBE_SIZE], uint8_t brightness);
 
-void Load_Buffer_0(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE]);
-//void Load_Buffer_1(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE]);
+void Load_Buffer(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE]);
 void Invert_Axis(uint16_t mask[CUBE_SIZE], uint8_t axis);
 void Create_Diagonal_Mask(uint16_t mask[CUBE_SIZE], uint8_t cnt);
 void Clear_Buffer(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE]);
