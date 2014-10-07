@@ -12,27 +12,15 @@ IR-Receiver 38 kHz - on Ext Interrupt Pin (PD.2)
 #define PRESCALER_1024 (1<<CS02) | (1<<CS00) 
 // for Timer0 : 8 MHz : 1 tic = 128 us, overflow = 32,7 ms
 
-#define BTN_UP     0x01
-#define BTN_LEFT   0x02
-#define BTN_RIGHT  0x03
-#define BTN_DOWN   0x04
-#define BTN_CENTER 0x05
-#define BTN_MENU   0x06 
-#define BTN_PLAY   0x07
-#define RC_Short_Repeat_Counter_Limit 2  // * 100 ms - Interval between repeating commands
-#define RC_Long_Repeat_Counter_Limit 10  // * 100 ms - Interval before repeat 
-
 volatile unsigned char Global_Variable;
 
-unsigned char RC_No_Signal_Counter = 0;            // Count of 32ms intervals without any signal
 unsigned char RC_Void_Command_Flag = 0;         // trick for Apple Remote
 unsigned char RC_Received_Bits_Counter = 0;
 unsigned char RC_Received_1Byte_Buffer = 0;
-unsigned char RC_Repeat_Counter_Limit = 0;        // Number of "Repeat signals" to skip while repeating 
-unsigned char RC_Repeat_Counter = 0;            // Current number of "Repeat signals" (110 ms)
 unsigned char RC_Current_Command = 0;
 unsigned char RC_Received_Bytes[4] = {0,0,0,0};
-unsigned char RC_Received_Bytes_Counter =0;
+unsigned char RC_Received_Bytes_Counter = 0;
+uint8_t RC_Last_Command = 0;
 
 void RC_Init (void)
 {
@@ -45,14 +33,11 @@ void RC_Init (void)
     TCCR0 = PRESCALER_1024;          
 };                                                
 
-void RC_Action(unsigned char RC_Command)
+uint8_t RC_Get_Command(void)
 {
-	if (RC_Command == BTN_LEFT)
-		Global_Variable++;
-	if (RC_Command == BTN_RIGHT)
-		Global_Variable--;
-	RC_Command = 0;
-	RC_Current_Command = 0;
+	uint8_t temp = RC_Last_Command;
+	RC_Last_Command = 0;
+	return temp;
 };
 
 ISR (INT0_vect)     // External Interrupt    
@@ -62,9 +47,7 @@ ISR (INT0_vect)     // External Interrupt
     RC_Interval = TCNT0;                    // Take Length of the last Interval
 
     TCCR0 = PRESCALER_1024; 
-    TCNT0 = 0;                                 // Reset Timer0
-
-    RC_No_Signal_Counter = 0;    
+    TCNT0 = 0;                                 // Reset Timer0  
 
     if (PIND & (1<<2)) // If 1 on input pin
         {
@@ -85,9 +68,7 @@ ISR (INT0_vect)     // External Interrupt
                     RC_Received_Bits_Counter++;
                 };
             if (((RC_Interval > 30) && (RC_Interval < 40))) // 4,5 ms - absolutely new command signal
-                {                                            // Reset all counters!    
-                    RC_Repeat_Counter = 0;    
-                    RC_Repeat_Counter_Limit = RC_Long_Repeat_Counter_Limit;            
+                {                                            // Reset all counters!                 
                     RC_Received_1Byte_Buffer = 0;  
                     RC_Received_Bits_Counter = 0;
                     RC_Received_Bytes_Counter = 0;  
@@ -137,31 +118,13 @@ ISR (INT0_vect)     // External Interrupt
 
 ISR (TIMER0_OVF_vect) // 32 ms without any signal
 {    
-    RC_No_Signal_Counter++;
-    if (RC_No_Signal_Counter == 1)    // 32 MS WITHOUT ANY SIGNAL //
-        {
-            GICR &= ~(1<<INT0);                 // Disable External Interrupts
-            if (RC_Current_Command != 0)
-                {    
-                    
-					
-					if ((RC_Repeat_Counter == 0) && (!RC_Void_Command_Flag))
-                        {
-                            RC_Action(RC_Current_Command);    // RUN COMMAND
-                        };
-                    RC_Repeat_Counter++;
-                    RC_Void_Command_Flag = 0;
-                    if (RC_Repeat_Counter == RC_Repeat_Counter_Limit)  // Short repeat
-                        {
-                            RC_Repeat_Counter = 0;
-                            RC_Repeat_Counter_Limit = RC_Short_Repeat_Counter_Limit;
-                        };
-                };
-            GICR |= (1<<INT0);                // Enable External Interrupts
-        }
-    if (RC_No_Signal_Counter == 5)        // 160 MS WITHOUT ANY SIGNAL
-        {
-            TCCR0 = 0;            // Stop Timer0    
-            RC_Current_Command = 0x00;
-        };
+	GICR &= ~(1<<INT0);                 // Disable External Interrupts
+	TCCR0 = 0;            // Stop Timer0 
+	if (RC_Current_Command != 0)
+	{    
+		RC_Last_Command = RC_Current_Command;
+		RC_Current_Command = 0;
+		RC_Void_Command_Flag = 0;
+	};
+	GICR |= (1<<INT0);                // Enable External Interrupts  
 };
