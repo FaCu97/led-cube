@@ -3,6 +3,40 @@
 #include <stdio.h>
 
 
+void Pattern (uint8_t n, uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
+{
+	static uint8_t current_pattern = 0;
+
+	if (n != current_pattern)
+	{
+		Clear_Buffer(buffer);
+		current_pattern = n;
+	};
+
+	switch (n)
+	{
+		case 0 :
+			Snow_Pattern(buffer); 
+			break;
+		case 1 :
+			Diagonal_Pattern(buffer); 
+			break;
+		case 2 : 
+			Scale_Pattern(buffer); 
+			break;
+		case 3 : 
+			Explode_Pattern(buffer); 
+			break;
+		case 4 : 
+			Raindrops_Pattern(buffer); 
+			break;
+		case 5 : 
+			Swirl_Pattern(buffer); 
+			break;
+	};
+};
+
+
 void Raindrops_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 {
 	static uint8_t counter = 0;	
@@ -44,8 +78,6 @@ void Raindrops_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 			if (source_layer[ix][iy] > 0)
 				source_layer[ix][iy]--;
 };
-
-
 
 
 

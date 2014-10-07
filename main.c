@@ -7,9 +7,6 @@
 
 extern unsigned char Global_Variable;
 uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE];
-uint16_t mask[CUBE_SIZE];
-
-#define TIME 300
 
 int main(void)
 {
@@ -18,31 +15,10 @@ int main(void)
 	
 	while(1)
 	{	
-		switch ( Global_Variable&0x03)
-		{
-			case 0 : 
-			{	
-				Snow_Pattern(buffer); 
-				break;
-			};
-			case 1 : 
-			{
-				Diagonal_Pattern(buffer); 
-				break;
-			};
-			case 2 : 
-			{
-				Scale_Pattern(buffer); 
-				break;
-			};
-			case 3 : 
-			{
-				Explode_Pattern(buffer); 
-				break;
-			};
-		};
 		Load_Buffer(buffer);
-        _delay_ms(30);
+        _delay_ms(100);
+		Pattern(Global_Variable&0x03, buffer);
+
 	};
 };
 
