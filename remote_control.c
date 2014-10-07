@@ -12,13 +12,13 @@ IR-Receiver 38 kHz - on Ext Interrupt Pin (PD.2)
 #define PRESCALER_1024 (1<<CS02) | (1<<CS00) 
 // for Timer0 : 8 MHz : 1 tic = 128 us, overflow = 32,7 ms
 
-#define Btn_UP     0x01
-#define Btn_LEFT   0x02
-#define Btn_RIGHT  0x03
-#define Btn_DOWN   0x04
-#define Btn_CENTER 0x05
-#define Btn_MENU   0x06 
-#define Btn_PLAY   0x07
+#define BTN_UP     0x01
+#define BTN_LEFT   0x02
+#define BTN_RIGHT  0x03
+#define BTN_DOWN   0x04
+#define BTN_CENTER 0x05
+#define BTN_MENU   0x06 
+#define BTN_PLAY   0x07
 #define RC_Short_Repeat_Counter_Limit 2  // * 100 ms - Interval between repeating commands
 #define RC_Long_Repeat_Counter_Limit 10  // * 100 ms - Interval before repeat 
 
@@ -47,9 +47,9 @@ void RC_Init (void)
 
 void RC_Action(unsigned char RC_Command)
 {
-	if (RC_Command == Btn_LEFT)
+	if (RC_Command == BTN_LEFT)
 		Global_Variable++;
-	if (RC_Command == Btn_RIGHT)
+	if (RC_Command == BTN_RIGHT)
 		Global_Variable--;
 	RC_Command = 0;
 	RC_Current_Command = 0;
@@ -116,13 +116,13 @@ ISR (INT0_vect)     // External Interrupt
                             RC_Void_Command_Flag = 0; // trick for Apple Remote
                             switch (RC_Received_Bytes[2]) 
                                 {
-                                    case 0x0B : RC_Current_Command = Btn_UP; break;
-                                    case 0x08 : RC_Current_Command = Btn_LEFT; break;
-                                    case 0x07 : RC_Current_Command = Btn_RIGHT; break;
-                                    case 0x0D : RC_Current_Command = Btn_DOWN; break;
-                                    case 0x02 : RC_Current_Command = Btn_MENU; break;
-                                    case 0x5D : RC_Current_Command = Btn_CENTER; break;
-                                    case 0x5E : RC_Current_Command = Btn_PLAY; break;
+                                    case 0x0B : RC_Current_Command = BTN_UP; break;
+                                    case 0x08 : RC_Current_Command = BTN_LEFT; break;
+                                    case 0x07 : RC_Current_Command = BTN_RIGHT; break;
+                                    case 0x0D : RC_Current_Command = BTN_DOWN; break;
+                                    case 0x02 : RC_Current_Command = BTN_MENU; break;
+                                    case 0x5D : RC_Current_Command = BTN_CENTER; break;
+                                    case 0x5E : RC_Current_Command = BTN_PLAY; break;
                                     case 0x04 : RC_Void_Command_Flag = 1; break; // trick for Apple Remote
                                       default : RC_Current_Command = 0x00;
                                 };
@@ -143,7 +143,9 @@ ISR (TIMER0_OVF_vect) // 32 ms without any signal
             GICR &= ~(1<<INT0);                 // Disable External Interrupts
             if (RC_Current_Command != 0)
                 {    
-                    if ((RC_Repeat_Counter == 0) && (!RC_Void_Command_Flag))
+                    
+					
+					if ((RC_Repeat_Counter == 0) && (!RC_Void_Command_Flag))
                         {
                             RC_Action(RC_Current_Command);    // RUN COMMAND
                         };
