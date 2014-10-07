@@ -2,8 +2,12 @@
 #include "led_cube.h"
 #include <stdio.h>
 
+uint8_t counter = 0;
+uint8_t sub_counter = 0;
+uint16_t mask[4] = {0,0,0,0};
+uint8_t density = 1;
 
-void Pattern (uint8_t n, uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
+void Pattern(uint8_t n, uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 {
 	static uint8_t current_pattern = 0;
 
@@ -11,6 +15,9 @@ void Pattern (uint8_t n, uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 	{
 		Clear_Buffer(buffer);
 		current_pattern = n;
+		counter = 0;
+		sub_counter = 0;
+		density = 1;
 	};
 
 	switch (n)
@@ -39,12 +46,10 @@ void Pattern (uint8_t n, uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 
 void Raindrops_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 {
-	static uint8_t counter = 0;	
 	static uint8_t pos_cnt = 0;
 	static uint8_t pos[CUBE_SIZE*CUBE_SIZE] = { 0, 5, 12, 3, 11, 9, 8, 15, 1, 10, 4, 7, 13, 2, 6, 14 };
 	static uint8_t source_layer[CUBE_SIZE][CUBE_SIZE];
 	uint8_t ix,iy,iz;
-
 
 	if (counter == 3)
 	{
@@ -86,9 +91,7 @@ void Diagonal_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 {
 	#define DIAGONAL_SIZE  ((CUBE_SIZE-1)*3 + 1)	
 
-	uint16_t mask[4] = {0,0,0,0};
-	uint8_t i;
-	static uint8_t counter = 0;	
+	uint8_t i;	
 	static uint8_t angle = 0;	
 
 	for (i = 0; i < CUBE_SIZE; i++)
@@ -119,8 +122,6 @@ void Snow_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 {
 	#define SNOW_VALUE_MAX  (BRIGHTNESS_MAX)	
 	static uint16_t fading_away[4] = {0,0,0,0};
-	static uint8_t counter = 0;
-	static uint8_t density = 1;
 	static uint8_t direction = 0;
 	uint8_t random_number;
 	uint8_t ix,iy,iz;
@@ -176,10 +177,6 @@ void Snow_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 		if (density == 0)
 			direction = 0;
 	};
-
-
-
-
 };
 
 void Swirl_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
@@ -189,10 +186,7 @@ void Swirl_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 
 void Scale_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 {
-	static uint8_t counter = 0;
 	static uint8_t direction = 0;
-	static uint16_t mask[4] = {0,0,0,0};
-	static uint8_t sub_counter = 0;
 	static uint8_t inv_axis = 0;
 	static uint8_t angle = 0;
 
@@ -253,17 +247,11 @@ void Scale_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 
 
 
-
-
 void Explode_Pattern (uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 {
-	static uint16_t mask[4] = {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF};
-	static uint8_t counter = 0;
-	static uint8_t sub_counter = 0;	
 	static uint8_t direction = 0;
 
 	#define EXPLODE_VALUE_MAX (BRIGHTNESS_MAX - 1)
-
 
 	switch (counter%4)
 	{
@@ -294,16 +282,3 @@ void Explode_Pattern (uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 			counter = 0;
 	};
 };
-
-
-
-
-
-
-
-
-
-
-
-
-

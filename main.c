@@ -18,7 +18,6 @@ int main(void)
 		Load_Buffer(buffer);
         _delay_ms(100);
 		Pattern(Global_Variable&0x03, buffer);
-
 	};
 };
 
