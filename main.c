@@ -17,9 +17,9 @@ int main(void)
 	
 	while (1)
 	{
-		Swirl_Pattern(buffer);
+		Raindrops_Pattern(buffer);
 		Load_Buffer(buffer);
-		_delay_ms(30);
+		_delay_ms(100);
 	}
 	
 /*	while(1)

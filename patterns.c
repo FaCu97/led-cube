@@ -40,28 +40,24 @@ void Pattern(uint8_t n, uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 		case 5 : 
 			Swirl_Pattern(buffer); 
 			break;
+		case 6 :
+			Raindrops_Pattern(buffer);
+			break;
 	};
 };
 
 
 void Raindrops_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 {
-	static uint8_t pos_cnt = 0;
-	static uint8_t pos[CUBE_SIZE*CUBE_SIZE] = { 0, 5, 12, 3, 11, 9, 8, 15, 1, 10, 4, 7, 13, 2, 6, 14 };
 	static uint8_t source_layer[CUBE_SIZE][CUBE_SIZE];
 	uint8_t ix,iy,iz;
 
-	if (counter == 3)
+	if (counter == 5)
 	{
-		ix = pos[pos_cnt] / CUBE_SIZE;
-		iy = pos[pos_cnt] % CUBE_SIZE;
-		source_layer[ix][iy] = 2;
-
+		ix = rand()&0x03;
+		iy = rand()&0x03;
+		source_layer[ix][iy] = BRIGHTNESS_MAX;
 		counter = 0;
-
-		pos_cnt++;
-		if (pos_cnt == CUBE_SIZE*CUBE_SIZE)
-			pos_cnt = 0;
 	};
 
 	counter++;
@@ -69,14 +65,32 @@ void Raindrops_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 	for (iz = 0; iz < CUBE_SIZE; iz++)
 		for (ix = 0; ix < CUBE_SIZE; ix++)
 			for (iy = 0; iy < CUBE_SIZE; iy++)
-				if (((iz < (CUBE_SIZE-1)) && (buffer[iz+1][ix][iy] > 0)) || ((iz == (CUBE_SIZE-1)) && (source_layer[ix][iy] > 0)))
+				if (iz == (CUBE_SIZE-1)) // top layer
 				{
-					if (buffer[iz][ix][iy] < BRIGHTNESS_MAX)
-						buffer[iz][ix][iy]++;
+					if (source_layer[ix][iy])
+					{
+						source_layer[ix][iy] = 0;
+						buffer[iz][ix][iy] = BRIGHTNESS_MAX;
+					}
+					else
+					{
+						buffer[iz][ix][iy] = 0;
+					};						
+					
 				}
-				else
-					if (buffer[iz][ix][iy] > 0)
-						buffer[iz][ix][iy]--;
+				else // lower layers
+				{
+					if (buffer[iz+1][ix][iy])
+					{
+						buffer[iz+1][ix][iy] = 0;
+						buffer[iz][ix][iy] = BRIGHTNESS_MAX;
+					}
+					else
+					{
+						buffer[iz][ix][iy] = 0;
+					};					
+				};
+			
 
 	for (ix = 0; ix < CUBE_SIZE; ix++)
 		for (iy = 0; iy < CUBE_SIZE; iy++)
