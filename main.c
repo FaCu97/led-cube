@@ -9,17 +9,33 @@ uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE];
 
 int main(void)
 {
-	uint8_t x = 0, y = 0, z = 0, b = 2;
-	uint8_t dir = 0;
-	uint8_t temp = 0;
+	uint8_t i = 0;
+	uint8_t temp;
+	
 	RC_Init();
 	Cube_Init();
 	
 	while (1)
 	{
-		Raindrops_Pattern(buffer);
+		temp = RC_Get_Command();
+		switch (temp)
+		{
+			case BTN_RIGHT: 
+				if (i < N_OF_PATTERNS-1)
+					i++; 
+				else
+					i = 0;
+				break;
+			case BTN_LEFT: 
+				if (i > 0)
+					i--;
+				else
+					i = N_OF_PATTERNS-1;
+				break;
+		}		
+		Pattern(i,buffer);
 		Load_Buffer(buffer);
-		_delay_ms(100);
+		_delay_ms(30);
 	}
 	
 /*	while(1)

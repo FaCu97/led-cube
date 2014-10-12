@@ -40,9 +40,6 @@ void Pattern(uint8_t n, uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 		case 5 : 
 			Swirl_Pattern(buffer); 
 			break;
-		case 6 :
-			Raindrops_Pattern(buffer);
-			break;
 	};
 };
 
@@ -52,13 +49,24 @@ void Raindrops_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 	static uint8_t source_layer[CUBE_SIZE][CUBE_SIZE];
 	uint8_t ix,iy,iz;
 
-	if (counter == 5)
+	
+	counter++;
+	if (counter < 3) // lowering FPS
+		return;
+	
+	counter = 0;
+
+
+	if (sub_counter == 2) // density: lower value - higher frequency
 	{
 		ix = rand()&0x03;
 		iy = rand()&0x03;
 		source_layer[ix][iy] = BRIGHTNESS_MAX;
-		counter = 0;
+		sub_counter = 0;
 	};
+
+	sub_counter++;
+
 
 	counter++;
 	
@@ -69,8 +77,9 @@ void Raindrops_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 				{
 					if (source_layer[ix][iy])
 					{
-						source_layer[ix][iy] = 0;
-						buffer[iz][ix][iy] = BRIGHTNESS_MAX;
+						buffer[iz][ix][iy] = source_layer[ix][iy];
+						source_layer[ix][iy]--;
+						
 					}
 					else
 					{
@@ -82,20 +91,15 @@ void Raindrops_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 				{
 					if (buffer[iz+1][ix][iy])
 					{
-						buffer[iz+1][ix][iy] = 0;
-						buffer[iz][ix][iy] = BRIGHTNESS_MAX;
+						buffer[iz][ix][iy] = buffer[iz+1][ix][iy];
+						buffer[iz+1][ix][iy]--;
+						;
 					}
 					else
 					{
 						buffer[iz][ix][iy] = 0;
 					};					
 				};
-			
-
-	for (ix = 0; ix < CUBE_SIZE; ix++)
-		for (iy = 0; iy < CUBE_SIZE; iy++)
-			if (source_layer[ix][iy] > 0)
-				source_layer[ix][iy]--;
 };
 
 

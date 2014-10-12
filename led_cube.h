@@ -8,6 +8,7 @@
 #define CUBE_SIZE   	4
 #define	OCR2_DEFAULT   	1
 #define HALF_PERIMETER  (CUBE_SIZE*2-2)
+#define N_OF_PATTERNS   6
 
 #define	DEBUG_PIN1	(1<<3) // green
 #define	DEBUG_PIN2	(1<<4) // white
