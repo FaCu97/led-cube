@@ -179,8 +179,58 @@ void Snow_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 	};
 };
 
+
+void Wrap_Line_Around(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE], uint8_t line[HALF_PERIMETER],uint8_t layer)
+{
+	uint8_t i;
+	for (i = 0; i < (CUBE_SIZE-1); i++)
+	{
+		buffer[layer][i][0] = line[i];
+		buffer[layer][CUBE_SIZE-1-i][CUBE_SIZE-1] = line[i];
+	};
+	for (i = 0; i < (CUBE_SIZE-1); i++)
+	{
+		buffer[layer][CUBE_SIZE-1][i] = line[CUBE_SIZE-1+i];
+		buffer[layer][0][CUBE_SIZE-i-1]   = line[CUBE_SIZE-1+i];
+	};		
+};
+
+
+
 void Swirl_Pattern(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE])
 {
+	#define BR_STEPS 3
+	static uint8_t br_steps[BR_STEPS] = {0, 5, 6};
+	uint8_t line[HALF_PERIMETER] = {0};
+	uint8_t i,j;
+	
+	line[counter] = br_steps[BR_STEPS - sub_counter - 1];
+	if (counter < (HALF_PERIMETER-1))
+		line[counter+1] = br_steps[sub_counter];
+	else
+		line[0] = br_steps[sub_counter];
+	
+	Clear_Buffer(buffer);
+	
+	for (i = 0; i < CUBE_SIZE; i++)
+	{
+		uint8_t temp;
+		Wrap_Line_Around(buffer,line,i);
+		temp = line[0];
+		for (j = 0; j < (HALF_PERIMETER-1); j++)
+			line[j] = line[j+1];
+		line[HALF_PERIMETER-1] = temp;
+	};		
+
+	sub_counter++;
+	
+	if (sub_counter == BR_STEPS)
+	{
+		sub_counter = 0;
+		counter++;
+		if (counter == HALF_PERIMETER)
+			counter = 0;
+	};	
 };
 
 

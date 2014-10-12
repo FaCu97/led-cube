@@ -15,7 +15,14 @@ int main(void)
 	RC_Init();
 	Cube_Init();
 	
-	while(1)
+	while (1)
+	{
+		Swirl_Pattern(buffer);
+		Load_Buffer(buffer);
+		_delay_ms(30);
+	}
+	
+/*	while(1)
 	{	
 		temp = RC_Get_Command();
 		if (temp)
@@ -39,7 +46,7 @@ int main(void)
 		//Load_Buffer(buffer);
         //_delay_ms(100);		
 		//Pattern(Global_Variable&0x03, buffer);
-	};
+	};*/
 };
 
 
