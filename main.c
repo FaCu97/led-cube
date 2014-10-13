@@ -3,9 +3,12 @@
 #include <util/delay.h>
 #include "led_cube.h"
 #include "patterns.h"
+#include "snake.h"
 #include "remote_control.h"
 
 uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE];
+snake_coordinates snake[4];
+enum snake_direction dir = DIR_X1;
 
 int main(void)
 {
@@ -14,7 +17,8 @@ int main(void)
 	
 	RC_Init();
 	Cube_Init();
-	
+
+/*	
 	while (1)
 	{
 		temp = RC_Get_Command();
@@ -37,7 +41,30 @@ int main(void)
 		Load_Buffer(buffer);
 		_delay_ms(30);
 	}
-	
+*/
+
+
+// SNAKE GAME
+
+	for (i = 0; i < SNAKE_LENGTH; i++)
+	{
+		snake[i].x = 2;
+		snake[i].y = 2;
+		snake[i].z = i;
+	}
+
+	dir = DIR_X1;
+	while (1)
+	{
+		Show_Snake(buffer, snake);
+		_delay_ms(500);
+		temp = RC_Get_Command();
+		if (temp)
+			dir = Change_Direction(dir,temp);	
+		Move_Snake(snake, dir);
+	};
+
+
 /*	while(1)
 	{	
 		temp = RC_Get_Command();

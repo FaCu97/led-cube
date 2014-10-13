@@ -30,3 +30,5 @@ Debug/patterns.o
 Debug/remote_control.d
 Debug/remote_control.o
 led_cube.atsuo
+Debug/snake.d
+Debug/snake.o
