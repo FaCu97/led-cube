@@ -1,47 +1,14 @@
 #include "snake.h"
 
 
-void Show_Snake(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE], snake_coordinates snake[SNAKE_LENGTH])
+void Show_Snake(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE], snake_coordinates snake[], uint8_t snake_length)
 {
-	uint8_t i;	
-	Clear_Buffer(buffer);
-	for (i = 0; i < SNAKE_LENGTH; i++)
-	{
-		buffer[snake[i].z][snake[i].x][snake[i].y] = BRIGHTNESS_MAX;
-	};
-	Load_Buffer(buffer);	
+	
 }
 
-void Move_Snake( snake_coordinates snake[SNAKE_LENGTH], enum snake_direction dir )
+void Move_Snake( snake_coordinates snake[], enum snake_direction dir , uint8_t snake_length)
 {
-	snake_coordinates temp;
-	uint8_t i;
-	for (i = (SNAKE_LENGTH-1); i > 0; i--)
-	{
-		snake[i] = snake[i-1];
-	};
-			
-	switch (dir)
-	{
-		case DIR_X0:
-			snake[0].x = (snake[0].x + 1) % CUBE_SIZE;
-			break;
-		case DIR_X1:
-			snake[0].x = (snake[0].x - 1 + CUBE_SIZE) % CUBE_SIZE; // fix it !!!!
-			break;
-		case DIR_Y0:
-			snake[0].y = (snake[0].y + 1) % CUBE_SIZE;
-			break;
-		case DIR_Y1:
-			snake[0].y = (snake[0].y - 1 + CUBE_SIZE) % CUBE_SIZE;
-			break;
-		case DIR_Z0:
-			snake[0].z = (snake[0].z + 1) % CUBE_SIZE;
-			break;
-		case DIR_Z1:
-			snake[0].z = (snake[0].z - 1 + CUBE_SIZE) % CUBE_SIZE;
-			break;
-	};			
+
 };
 
 
@@ -104,4 +71,9 @@ enum snake_direction Change_Direction(enum snake_direction dir, uint8_t button)
 			break;
 		};
 	};
+};
+
+void Snake_Delay(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE], uint8_t target[3])
+{
+
 };
