@@ -9,8 +9,9 @@
 uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE];
 snake_coordinates snake[MAX_SNAKE_LENGTH];
 snake_coordinates snake_head, snake_tail;
-uint8_t target[3] = {0,0,0};
+snake_coordinates target;
 enum snake_direction dir = DIR_X1;
+uint8_t snake_lengthten_flag = 0;
 
 int main(void)
 {
@@ -49,7 +50,9 @@ int main(void)
 
 // SNAKE GAME
 
-
+	target.x = 0;
+	target.y = 0;
+	target.z = 0;
 
 	snake_length = 1;
 	
@@ -79,15 +82,30 @@ int main(void)
 			buffer[snake[i].z][snake[i].x][snake[i].y] = BRIGHTNESS_MAX;	
 		snake_head = snake[snake_length-1];
 		
+	// Create new target
+		
+		if (snake_lengthten_flag)
+		{
+			uint8_t r = random();
+			target.x = 2;
+			target.y = 2;
+			target.z = 2;
+		};
+		
 	// Smooth transition
 		
 		for (i = 1; i < BRIGHTNESS_MAX + 1; i++) // i = 0
 		{
+			buffer[target.z][target.z][target.z] = (BRIGHTNESS_MAX/2)*(i & 0x1);
+			if (!snake_lengthten_flag)
+				buffer[snake_tail.z][snake_tail.x][snake_tail.y] = BRIGHTNESS_MAX - i;
 			buffer[snake_head.z][snake_head.x][snake_head.y] = i;
-			buffer[snake_tail.z][snake_tail.x][snake_tail.y] = BRIGHTNESS_MAX - i;
+			
 			Load_Buffer(buffer);
-			_delay_ms(300/BRIGHTNESS_MAX);
+			_delay_ms(250/BRIGHTNESS_MAX);
+			
 		};
+		snake_lengthten_flag = 0;
 	
 	// Move head of the snake
 	
@@ -117,15 +135,26 @@ int main(void)
 				break;
 		};
 
-	// Shift snake
+	// Move snake body
 	
-		snake_tail = snake[0];
-		for (i = 0; i < snake_length-1; i++)
-			snake[i] = snake[i+1];
+		if (((snake_head.x == target.x) && (snake_head.y == target.y)) && (snake_head.z == target.z)) // increase length 
+		{
+			snake[snake_length] = snake_head;
+			snake_length++;
+			snake_lengthten_flag = 1;
+		}
+		else // shift snake
+		{
+			snake_tail = snake[0];
+			for (i = 0; i < snake_length-1; i++)
+				snake[i] = snake[i+1];
+			snake[snake_length-1] = snake_head;
+		}
+		
 			
 	// If no target
 	
-		snake[snake_length-1] = snake_head;
+		
 				
 	};
 
