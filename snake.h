@@ -6,7 +6,7 @@
 #include "led_cube.h"
 #include "remote_control.h"
 
-#define MIN_SNAKE_LENGTH 3
+#define MIN_SNAKE_LENGTH 2
 #define MAX_SNAKE_LENGTH 10
 
 enum snake_direction {DIR_X0, DIR_X1, DIR_Y0, DIR_Y1, DIR_Z0, DIR_Z1};

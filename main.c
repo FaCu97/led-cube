@@ -8,6 +8,7 @@
 
 uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE];
 snake_coordinates snake[MAX_SNAKE_LENGTH];
+snake_coordinates snake_head, snake_tail;
 uint8_t target[3] = {0,0,0};
 enum snake_direction dir = DIR_X1;
 
@@ -48,72 +49,84 @@ int main(void)
 
 // SNAKE GAME
 
-	for (i = 0; i < snake_length; i++)
-	{
-		snake[i].x = 2;
-		snake[i].x = 2;
-		snake[i].y = i;
-	}
+
+
+	snake_length = 1;
+	
+	snake[0].x = 2;
+	snake[0].y = 1;
+	snake[0].z = 2;
+/*
+	snake[1].x = 2;
+	snake[1].y = 2;
+	snake[1].z = 2;
+*/
+	snake_tail.x = 2;
+	snake_tail.y = 0;
+	snake_tail.z = 2;
+	
+	snake_head = snake[snake_length-1];
 
 	dir = DIR_Y0;
 	
 	while (1)
 	{	
-		// Show_Snake		
+	
+	// Show_Snake
+				
 		Clear_Buffer(buffer);
 		for (i = 0; i < snake_length; i++)
-		{
-			buffer[snake[i].z][snake[i].x][snake[i].y] = BRIGHTNESS_MAX;
-		};
-		Load_Buffer(buffer);
-			
-		// Snake_Delay
+			buffer[snake[i].z][snake[i].x][snake[i].y] = BRIGHTNESS_MAX;	
+		snake_head = snake[snake_length-1];
 		
-		for (i = 0; i < 3; i++)
-		{
-			buffer[target[0]][target[1]][target[2]] = BRIGHTNESS_MAX/2;
-			Load_Buffer(buffer);
-			_delay_ms(100);
-			buffer[target[0]][target[1]][target[2]] = BRIGHTNESS_MAX/2-1;
-			Load_Buffer(buffer);
-			_delay_ms(100);
-		};
+	// Smooth transition
 		
+		for (i = 1; i < BRIGHTNESS_MAX + 1; i++) // i = 0
+		{
+			buffer[snake_head.z][snake_head.x][snake_head.y] = i;
+			buffer[snake_tail.z][snake_tail.x][snake_tail.y] = BRIGHTNESS_MAX - i;
+			Load_Buffer(buffer);
+			_delay_ms(300/BRIGHTNESS_MAX);
+		};
+	
+	// Move head of the snake
+	
 		temp = RC_Get_Command();
 		if (temp)
 			dir = Change_Direction(dir,temp);	
+	
+		switch (dir)
+		{
+			case DIR_X0:
+				snake_head.x = (snake_head.x + 1) % CUBE_SIZE;
+				break;
+			case DIR_X1:
+				snake_head.x = (snake_head.x - 1 + CUBE_SIZE) % CUBE_SIZE; // fix it !!!!
+				break;
+			case DIR_Y0:
+				snake_head.y = (snake_head.y + 1) % CUBE_SIZE;
+				break;
+			case DIR_Y1:
+				snake_head.y = (snake_head.y - 1 + CUBE_SIZE) % CUBE_SIZE;
+				break;
+			case DIR_Z0:
+				snake_head.z = (snake_head.z + 1) % CUBE_SIZE;
+				break;
+			case DIR_Z1:
+				snake_head.z = (snake_head.z - 1 + CUBE_SIZE) % CUBE_SIZE;
+				break;
+		};
 
-		// Move_Snake
-
-			for (i = (snake_length-1); i > 0; i--)
-			{
-				snake[i] = snake[i-1];
-			};
-					
-			switch (dir)
-			{
-				case DIR_X0:
-				snake[0].x = (snake[0].x + 1) % CUBE_SIZE;
-				break;
-				case DIR_X1:
-				snake[0].x = (snake[0].x - 1 + CUBE_SIZE) % CUBE_SIZE; // fix it !!!!
-				break;
-				case DIR_Y0:
-				snake[0].y = (snake[0].y + 1) % CUBE_SIZE;
-				break;
-				case DIR_Y1:
-				snake[0].y = (snake[0].y - 1 + CUBE_SIZE) % CUBE_SIZE;
-				break;
-				case DIR_Z0:
-				snake[0].z = (snake[0].z + 1) % CUBE_SIZE;
-				break;
-				case DIR_Z1:
-				snake[0].z = (snake[0].z - 1 + CUBE_SIZE) % CUBE_SIZE;
-				break;
-			};
-		
-		
-		
+	// Shift snake
+	
+		snake_tail = snake[0];
+		for (i = 0; i < snake_length-1; i++)
+			snake[i] = snake[i+1];
+			
+	// If no target
+	
+		snake[snake_length-1] = snake_head;
+				
 	};
 
 

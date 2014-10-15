@@ -75,5 +75,14 @@ enum snake_direction Change_Direction(enum snake_direction dir, uint8_t button)
 
 void Snake_Delay(uint8_t buffer[CUBE_SIZE][CUBE_SIZE][CUBE_SIZE], uint8_t target[3])
 {
-
+	uint8_t i;
+		for (i = 0; i < 3; i++)
+		{
+			buffer[target[0]][target[1]][target[2]] = BRIGHTNESS_MAX/2;
+			Load_Buffer(buffer);
+			_delay_ms(100);
+			buffer[target[0]][target[1]][target[2]] = BRIGHTNESS_MAX/2-1;
+			Load_Buffer(buffer);
+			_delay_ms(100);
+		};
 };
