@@ -16,6 +16,7 @@ uint8_t snake_lengthten_flag = 0;
 int main(void)
 {
 	uint8_t i = 0;
+	uint8_t r = 0;
 	uint8_t temp;
 	uint8_t snake_length = MIN_SNAKE_LENGTH;
 	
@@ -86,10 +87,10 @@ int main(void)
 		
 		if (snake_lengthten_flag)
 		{
-			uint8_t r = random();
-			target.x = 2;
-			target.y = 2;
-			target.z = 2;
+			r = random();
+			target.x = r & 0x3;
+			target.y = (r>>2) & 0x3;
+			target.z = (r>>4) & 0x3;
 		};
 		
 	// Smooth transition
@@ -102,7 +103,7 @@ int main(void)
 			buffer[snake_head.z][snake_head.x][snake_head.y] = i;
 			
 			Load_Buffer(buffer);
-			_delay_ms(250/BRIGHTNESS_MAX);
+			_delay_ms(400/BRIGHTNESS_MAX);
 			
 		};
 		snake_lengthten_flag = 0;
